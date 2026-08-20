@@ -98,16 +98,13 @@ summary{cursor:pointer;font-size:13px;color:var(--blue);font-weight:600}
         <div><label>运行模式</label>
           <select id="mode"><option value="demo">演示（Stub · 秒回）</option><option value="live">真实 LLM</option></select></div>
         <div><label>流水线</label>
-          <select id="pipeline"><option value="standard">标准（A→B→C→D→E）</option><option value="fast">Fast（仅 B/C/D）</option><option value="custom">自定义流程（Beta）</option></select></div>
+          <select id="pipeline"><option value="standard">标准（A→B→C→D→E）</option><option value="fast">Fast（仅 B/C/D）</option><option value="pro">Pro（全流程 + C 零缺陷 N 轮重审门槛）</option><option value="custom">自定义流程（Beta）</option></select></div>
         <div><label>强度分档</label>
           <select id="intensity"><option value="low">low · 精简</option><option value="high" selected>high · 标准</option><option value="max">max · 从严</option></select></div>
         <div><label>熔断上限（1~10）</label>
           <input id="max_iter" type="number" min="1" max="10" value="5"></div>
-        <div><label>Pro 模式（C 连续 N 轮零缺陷，D 才审判）</label>
-          <div style="display:flex;gap:8px;align-items:center">
-            <input id="pro_on" type="checkbox" style="width:auto;accent-color:var(--blue)">
-            <input id="pro_n" type="number" min="1" max="10" value="3" style="width:80px">
-          </div></div>
+        <div id="pro-n-box" class="hide"><label>Pro 门槛 N（C 连续 N 轮零缺陷，D 才审判）</label>
+          <input id="pro_n" type="number" min="1" max="10" value="3"></div>
         <div id="spec-box" class="hide" style="grid-column:1/-1"><label>流程定义（支持 - → &gt; 等连接符，如 A-&gt;B-&gt;C-&gt;F-&gt;D-&gt;E）</label>
           <input id="spec" value="A->B->C->D->E">
           <div id="flow-errors" style="font-size:12px;margin-top:6px;"></div></div>
@@ -235,6 +232,7 @@ function renderPrompts(){
 $('#mode').onchange=e=>$$('.live-cfg').forEach(el=>el.classList.toggle('hide',e.target.value!=='live'));
 $('#pipeline').onchange=()=>{
   $('#spec-box').classList.toggle('hide',$('#pipeline').value!=='custom');
+  $('#pro-n-box').classList.toggle('hide',$('#pipeline').value!=='pro');
   renderRoles();renderPipe([]);renderPrompts();
 };
 let _vfT=null;
@@ -278,7 +276,7 @@ $('#go').onclick=async()=>{
   const mode=$('#mode').value;
   const body={task:$('#task').value,mode,pipeline:$('#pipeline').value,
     intensity:$('#intensity').value,max_iterations:+$('#max_iter').value||5,
-    pro_zero_rounds:($('#pro_on').checked?((+$('#pro_n').value)||3):0),
+    pro_zero_rounds:($('#pipeline').value==='pro'?((+$('#pro_n').value)||3):0),
     plugins:Object.fromEntries($$('.plug input').map(c=>[c.dataset.k,c.checked]))};
   if(body.pipeline==='custom')body.pipeline_spec=$('#spec').value;
   body.role_prompts={};body.custom_roles={};
@@ -332,8 +330,8 @@ function draw(d){
   const p=d.public;
   if(p){
   $('#iter').textContent='返工 '+p.iteration+'/'+p.max_iterations;
-  let c='<span class="chip v">'+(p.pipeline==='fast'?'Fast':'标准')+' · '+p.intensity+'</span>';
-  if(p.pro_zero_rounds>0)c+='<span class="chip v">Pro · 零缺陷×'+p.pro_zero_rounds+'</span>';
+  let c='<span class="chip v">'+(p.pipeline==='fast'?'Fast':p.pipeline==='pro'?'Pro':'标准')+' · '+p.intensity+'</span>';
+  if(p.pipeline==='pro')c+='<span class="chip v">零缺陷×'+(p.pro_zero_rounds||3)+'</span>';
     if(p.hub)c+='<span class="chip v">广播枢纽已激活</span>';
     if(p.outline)c+='<span class="chip">提纲 '+p.outline.nodes.length+' 节点 · 冻结 '+p.outline.nodes.filter(x=>x.frozen).length+'</span>';
     if(p.critic_report){const ds=p.critic_report.defects;
