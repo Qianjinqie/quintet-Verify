@@ -222,7 +222,7 @@ The console supports: Standard / Fast / Custom pipelines, intensity tiers, plugi
 
 <a id="contributing"></a>
 
-Contributing
+## Contributing
 
 Both PRs and Issues are welcome. Please run python server.py and the offline demo before submitting, and describe your motivation and test results in the PR. Beginners can start with issues labelled good first issue.
 
@@ -230,7 +230,7 @@ Both PRs and Issues are welcome. Please run python server.py and the offline dem
 
 <a id="theoretical-origins-and-independence-statement"></a>
 
-Theoretical Origins and Independence Statement
+## Theoretical Origins and Independence Statement
 
 <a id="inspirations"></a>
 
