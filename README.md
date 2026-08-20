@@ -5,6 +5,7 @@ Quintet-Verify (QV)
 与模型无关 · Python 3.11+ · LangGraph · Pydantic v2 · FastAPI
 
 🌐 线上 Demo(已通过 workbuddy 部署)：https://a524b836ec13d5d9f.app.workbuddy.link
+
 效果先行
 
 📊 Fable 5 盲评结论
@@ -82,7 +83,7 @@ from quintet_verify import (
     build_llm_agents,
 )
 
-# 1. 配置模型（OpenAI 兼容接口，五角共用或分角色配置）
+1. 配置模型（OpenAI 兼容接口，五角共用或分角色配置）
 cfg = LLMConfig(
     api_key="sk-...",
     base_url="https://api.deepseek.com/v1",
@@ -90,7 +91,7 @@ cfg = LLMConfig(
 )
 agents = build_llm_agents(cfg)  # 返回 (A, B, C, D, E) 五个角色
 
-# 2. 构图并运行（interrupt_before_e=False 表示不在 E 前挂起等待用户反馈）
+2. 构图并运行（interrupt_before_e=False 表示不在 E 前挂起等待用户反馈）
 graph = build_graph(*agents, interrupt_before_e=False)
 final = graph.invoke(
     QuintetState(
@@ -103,7 +104,7 @@ final = graph.invoke(
     )
 )
 
-# 3. 读取结果
+3. 读取结果
 pub = final["public"]
 print(pub.verdict.approved, pub.verdict.confidence_score)  # D 的裁决与置信度
 for section in pub.draft.sections:
