@@ -1,4 +1,5 @@
-Quintet-Verify (QV)
+```markdown
+# Quintet-Verify (QV)
 
 A multi-agent cognitive control framework based on anchored cognitive architecture – using a five‑role (A/B/C/D/E) tribunal‑style division of labor and private cognitive traces (✓/?/✗) to impose rigid checks and balances on agents at inference time: no fine‑tuning, no weight changes, only constraints on “who speaks when, with what authority, and based on what evidence.”
 
@@ -8,62 +9,62 @@ A multi-agent cognitive control framework based on anchored cognitive architectu
 
 ---
 
-Table of Contents
+## Table of Contents
 
-· Results First
-  · Fable 5 Blind Evaluation Conclusion
-· Key Constraints
-· Why Not Just Use One Large Model?
-· Core Features
-· How Is It Different From Other Multi‑Agent Frameworks?
-· Quality Explanation
-· Real‑Run Data
-· Who Should Use It?
-· Quick Start
-  · Installation
-  · Minimal Example (Real LLM)
-  · Offline Demo Without LLM
-  · Web Console
-· Contributing
-· Theoretical Origins and Independence Statement
-  · Inspirations
-  · Fundamental Architectural Differences
-  · Core Difference Summary
-  · Independence Statement
+- [Results First](#results-first)
+  - [Fable 5 Blind Evaluation Conclusion](#fable-5-blind-evaluation-conclusion)
+- [Key Constraints](#key-constraints)
+- [Why Not Just Use One Large Model?](#why-not-just-use-one-large-model)
+- [Core Features](#core-features)
+- [How Is It Different From Other Multi‑Agent Frameworks?](#how-is-it-different-from-other-multi-agent-frameworks)
+- [Quality Explanation](#quality-explanation)
+- [Real‑Run Data](#real-run-data)
+- [Who Should Use It?](#who-should-use-it)
+- [Quick Start](#quick-start)
+  - [Installation](#installation)
+  - [Minimal Example (Real LLM)](#minimal-example-real-llm)
+  - [Offline Demo Without LLM](#offline-demo-without-llm)
+  - [Web Console](#web-console)
+- [Contributing](#contributing)
+- [Theoretical Origins and Independence Statement](#theoretical-origins-and-independence-statement)
+  - [Inspirations](#inspirations)
+  - [Fundamental Architectural Differences](#fundamental-architectural-differences)
+  - [Core Difference Summary](#core-difference-summary)
+  - [Independence Statement](#independence-statement)
 
 ---
 
-Results First
+## Results First
 
-📊 Fable 5 Blind Evaluation Conclusion
+📊 **Fable 5 Blind Evaluation Conclusion**
 
 The blind evaluation by Fable 5 gave our project an overall score of 9.17/10, while the contestant (Fable5, unknown to the judges) received 8.0/10 – a margin of +1.17.
 
 All three tasks were won:
 
-· Code Review: 9.2 vs 8.5 (contestant F5 missed subtle issues like rpop message loss, state field overwriting, and predictable task_id leakage)
-· Technical Solution Assessment: 9.5 vs 8.0 (F5 miscomputed pairwise as pointwise in the ranking layer – a fatal error)
+· Code Review: 9.2 vs 8.5 (contestant F5 missed subtle issues like rpop message loss, state field overwriting, and predictable task_id leakage)  
+· Technical Solution Assessment: 9.5 vs 8.0 (F5 miscomputed pairwise as pointwise in the ranking layer – a fatal error)  
 · Legal Document Review: 8.8 vs 7.5 (F5 did not provide a specific verification plan)
 
 Note: The legal document task used DeepSeek‑V4‑Pro‑0813; code review and technical assessment used DeepSeek‑V4‑Flash‑0731. The framework ran in standard mode – high intensity.
 
 The evaluator (F5) concluded qualitatively:
 
-The evaluated system outperforms the subject in five dimensions: technical depth, computational accuracy, risk identification, data support, and professional rigor. Suitable for high‑stakes scenarios such as investment decisions, technical due diligence, pre‑production deployment reviews, and compliance audits.
+> The evaluated system outperforms the subject in five dimensions: technical depth, computational accuracy, risk identification, data support, and professional rigor. Suitable for high‑stakes scenarios such as investment decisions, technical due diligence, pre‑production deployment reviews, and compliance audits.
 
 Note: In practice, QV makes many API calls, incurring higher costs – it trades money and time for quality.
 
 ---
 
-Key Constraints
+## Key Constraints
 
-· A does not write the main text, B does not alter the framework, C does not provide full‑text revisions, D does not ghostwrite on behalf of others, E does not directly overturn rulings.
-· Cognitive markers ✓/?/✗ exist as private traces and never enter routing decisions.
+· A does not write the main text, B does not alter the framework, C does not provide full‑text revisions, D does not ghostwrite on behalf of others, E does not directly overturn rulings.  
+· Cognitive markers ✓/?/✗ exist as private traces and never enter routing decisions.  
 · Remands must include anchor coordinates; rework is limited to designated regions (ripple declarations constrain the scope of changes).
 
 ---
 
-Why Not Just Use One Large Model?
+## Why Not Just Use One Large Model?
 
 A single model’s “generation equals finality” is the root cause of hallucinations reaching the endpoint directly: it generates, reviews, and confirms by itself – the supervisor and the supervised share the same standpoint. Quintet‑Verify breaks this closed loop into five roles with mutually locked permissions –
 
@@ -71,71 +72,71 @@ Checks and balances evolve from “self‑discipline” to “other‑discipline
 
 ---
 
-Core Features
+## Core Features
 
-· Dual‑channel cognitive architecture: public (visible to routing) and private Dense Track (✓/?/✗) are physically isolated, with three layers of protection (structural / type / runtime assertions) ensuring private cognition never enters routing.
-· Five‑role rigid checks and balances: A (Architect) · B (Executor) · C (Verifier) · D (Judge) · E (Juror) – each with locked permissions and forbidden zones.
-· Three iron rules (enforced in code): ① confidence isolation ② incremental modification (anchor coordinates + ripple declarations) ③ circuit‑breaker gag order (max_iterations=110, D can issue a gag order).
-· Intensity tiers: low / high (default) / max; under stringent mode, defects must be accompanied by an impact chain, and D may not pass if confidence is insufficient.
-· Fast mode: only the B/C/D triangle, no outline, no appeal branch – suitable for simple tasks and low‑cost scenarios.
-· Overfitting governance: C has no mandatory quota (zero defects allowed, but must include a coverage statement); D may deem C overly pedantic and send it back for review (max 2 times).
-· Plugin mechanism: PLUGINS registry + flags (all off by default); optional qv_extras.py can be mounted via standardised pre/post_act_hooks.
-· Customisable workflow (v1.4): front‑end editing of workflow definitions, creating new roles and inheriting AE permissions, static validation, and per‑role independent LLM configuration.
+· **Dual‑channel cognitive architecture**: public (visible to routing) and private Dense Track (✓/?/✗) are physically isolated, with three layers of protection (structural / type / runtime assertions) ensuring private cognition never enters routing.  
+· **Five‑role rigid checks and balances**: A (Architect) · B (Executor) · C (Verifier) · D (Judge) · E (Juror) – each with locked permissions and forbidden zones.  
+· **Three iron rules (enforced in code)**: ① confidence isolation ② incremental modification (anchor coordinates + ripple declarations) ③ circuit‑breaker gag order (max_iterations=110, D can issue a gag order).  
+· **Intensity tiers**: low / high (default) / max; under stringent mode, defects must be accompanied by an impact chain, and D may not pass if confidence is insufficient.  
+· **Fast mode**: only the B/C/D triangle, no outline, no appeal branch – suitable for simple tasks and low‑cost scenarios.  
+· **Overfitting governance**: C has no mandatory quota (zero defects allowed, but must include a coverage statement); D may deem C overly pedantic and send it back for review (max 2 times).  
+· **Plugin mechanism**: PLUGINS registry + flags (all off by default); optional qv_extras.py can be mounted via standardised pre/post_act_hooks.  
+· **Customisable workflow (v1.4)**: front‑end editing of workflow definitions, creating new roles and inheriting AE permissions, static validation, and per‑role independent LLM configuration.
 
 ---
 
-How Is It Different From Other Multi‑Agent Frameworks?
+## How Is It Different From Other Multi‑Agent Frameworks?
 
-· AutoGen / CrewAI / MetaGPT: all support multi‑agent collaboration and are model‑agnostic, but they lack three capabilities: inference‑time rigid checks and balances, private cognitive trace auditing, and incremental modification (token‑saving).
-· Quintet‑Verify: on top of supporting multi‑agent collaboration and model‑agnosticism, it additionally provides:
-  · Inference‑time rigid checks and balances (tribunal‑style permission interlocking)
-  · Auditable private cognitive traces (Dense Track)
+· **AutoGen / CrewAI / MetaGPT**: all support multi‑agent collaboration and are model‑agnostic, but they lack three capabilities: inference‑time rigid checks and balances, private cognitive trace auditing, and incremental modification (token‑saving).  
+· **Quintet‑Verify**: on top of supporting multi‑agent collaboration and model‑agnosticism, it additionally provides:  
+  · Inference‑time rigid checks and balances (tribunal‑style permission interlocking)  
+  · Auditable private cognitive traces (Dense Track)  
   · Incremental modification (anchor coordinates + ripple declarations, saving on average ~80% context)
 
 Most frameworks do “let AI collaborate”; Quintet‑Verify does “let AI check and balance each other” – the former pursues output efficiency, the latter pursues conclusion trustworthiness.
 
 ---
 
-Quality Explanation
+## Quality Explanation
 
 Compared with using a single model directly, Quintet‑Verify’s gains come from structural checks and balances, not from larger parameter counts:
 
-· Compared with a pure model: hallucinations no longer reach the endpoint directly – they must first pass C’s review and D’s ruling, and each remand is constrained within anchor coordinates. C’s zero‑defect conclusion and D’s overfitting judgement simultaneously prevent internal friction from “nitpicking for the sake of it”.
-· Compared with pure J‑Space: J‑Space’s dense cognitive management operates inside a single model; the ceiling of self‑supervision is “catching oneself”. Quintet‑Verify retains ✓/?/✗ as private cognitive traces while delegating the ruling authority to independent roles – upgrading checks and balances from self‑discipline to other‑discipline.
+· **Compared with a pure model**: hallucinations no longer reach the endpoint directly – they must first pass C’s review and D’s ruling, and each remand is constrained within anchor coordinates. C’s zero‑defect conclusion and D’s overfitting judgement simultaneously prevent internal friction from “nitpicking for the sake of it”.  
+· **Compared with pure J‑Space**: J‑Space’s dense cognitive management operates inside a single model; the ceiling of self‑supervision is “catching oneself”. Quintet‑Verify retains ✓/?/✗ as private cognitive traces while delegating the ruling authority to independent roles – upgrading checks and balances from self‑discipline to other‑discipline.
 
 The above is a qualitative comparison at the mechanism level; practical effectiveness is generally far superior to its base model – see Results First for details.
 
 ---
 
-Real‑Run Data
+## Real‑Run Data
 
 Full‑mode real run (August 2026, DeepSeek‑V4‑Pro‑0813, legal document review task):
 
-· Token consumption: ~130,000
-· API calls: 19
-· Cost: ~¥2.3
+· Token consumption: ~130,000  
+· API calls: 19  
+· Cost: ~¥2.3  
 · Final ruling: D approved with 90/100 confidence
 
 The output concluded “conditionally feasible with hybrid architecture”: empirical assertions lacking data support in the initial draft were either removed entirely or downgraded to hypotheses pending verification after two remands; acceptance criteria were rewritten into auditable terms.
 
 ---
 
-Who Should Use It?
+## Who Should Use It?
 
-· Developers building RAG applications but plagued by hallucinations
-· Legal, financial, and healthcare scenarios requiring auditable AI decisions
-· Researchers wanting to experience multi‑agent checks and balances without writing complex orchestrations
-· Teams satisfied with AutoGen/CrewAI collaboration efficiency but demanding higher conclusion trustworthiness
-· Programmers using AI to write high‑quality code
+· Developers building RAG applications but plagued by hallucinations  
+· Legal, financial, and healthcare scenarios requiring auditable AI decisions  
+· Researchers wanting to experience multi‑agent checks and balances without writing complex orchestrations  
+· Teams satisfied with AutoGen/CrewAI collaboration efficiency but demanding higher conclusion trustworthiness  
+· Programmers using AI to write high‑quality code  
 · Researchers using AI for mathematical research assistance
 
 Note: Related plugins will be open‑sourced later.
 
 ---
 
-Quick Start
+## Quick Start
 
-Installation
+### Installation
 
 ```bash
 git clone https://github.com/Qianjinqie/quintet-Verify.git
