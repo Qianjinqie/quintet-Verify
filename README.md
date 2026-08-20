@@ -5,21 +5,21 @@ Quintet-Verify (QV)
 与模型无关 · Python 3.11+ · LangGraph · Pydantic v2 · FastAPI
 
 🌐 线上 Demo(已通过 workbuddy 部署)：https://a524b836ec13d5d9f.app.workbuddy.link
-效果先行
+先行效果
 
 📊 Fable 5 盲评结论
 
-Fable 5 对本项目输出的盲评综合评分为 9.17/10，对选手Fable5(评委不知道)评分为 8.0/10，差距 +1.17。
+Fable 5 对本项目输出的盲评综合评分为 9.17/10，对选手 Fable5(评委不知道) 评分为 8.0/10，差距 +1.17。
 
 三个任务全部领先：
 
-· 代码审查：9.2 vs 8.5（选手F5 遗漏了 rpop丢消息、状态字段覆盖、task_id可预测泄露 等隐蔽问题） · 技术方案评估：9.5 vs 8.0（F5在精排层将 pairwise 误算为 pointwise，误差致命） · 法律文书审查：8.8 vs 7.5（F5 未给出具体验证方案）
+· 代码审查：9.2 vs 8.5（选手 F5 遗漏了 rpop 丢消息、状态字段覆盖、task_id 可预测泄露等隐蔽问题） · 技术方案评估：9.5 vs 8.0（F5 在精排层将 pairwise 误算为 pointwise，误差致命） · 法律文书审查：8.8 vs 7.5（F5 未给出具体验证方案）
 
 注：法律文书任务使用 DeepSeek-V4 Pro-0812；代码审查与技术方案评估使用 DeepSeek-V4 Flash-0731。框架采用标准模式-high 强度。
 
-评委F5 对本项目的定性结论：
+评委 F5 对本项目的定性结论：
 
-"技术深度、计算准确性、风险识别、数据支撑、专业严谨性五个维度上系统性优于被评价对象。适合投资决策、技术尽调、生产部署前审查、合规审计等高要求场景。"
+技术深度、计算准确性、风险识别、数据支撑、专业严谨性五个维度上系统性优于被评价对象。适合投资决策、技术尽调、生产部署前审查、合规审计等高要求场景。
 
 一眼看懂：五角色是怎么协作的？
 
@@ -67,6 +67,7 @@ Full 模式真实运行（2026-08，DeepSeek-V4-Pro-0813 模型，法律文书�
 快速开始
 
 安装
+
 git clone https://github.com/Qianjinqie/quintet-Verify.git
 cd quintet-Verify
 pip install -r requirements.txt
@@ -117,6 +118,7 @@ final = build_graph(*build_stub_agents(), interrupt_before_e=False).invoke(
 )
 print(final["public"].verdict)
 Web 控制台
+
 
 python server.py  # 默认 8000 端口，浏览器打开即可
 控制台支持：标准 / Fast / 自定义三种流水线、强度分档、插件开关、分角色 API 配置、流程定义编辑与实时校验、角色提示词覆盖、运行过程可视化（事件流 / 草稿 / Dense Track）。
