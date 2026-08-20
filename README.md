@@ -4,8 +4,32 @@ A multi-agent cognitive control framework based on anchored cognitive architectu
 
 · Model‑agnostic · Python 3.11+ · LangGraph · Pydantic v2 · FastAPI
 
-🌐 Online Demo (deployed via workbuddy):
-https://a524b836ec13d5d9f.app.workbuddy.link
+🌐 Online Demo (deployed via workbuddy): https://a524b836ec13d5d9f.app.workbuddy.link
+
+---
+
+Table of Contents
+
+· Results First
+  · Fable 5 Blind Evaluation Conclusion
+· Key Constraints
+· Why Not Just Use One Large Model?
+· Core Features
+· How Is It Different From Other Multi‑Agent Frameworks?
+· Quality Explanation
+· Real‑Run Data
+· Who Should Use It?
+· Quick Start
+  · Installation
+  · Minimal Example (Real LLM)
+  · Offline Demo Without LLM
+  · Web Console
+· Contributing
+· Theoretical Origins and Independence Statement
+  · Inspirations
+  · Fundamental Architectural Differences
+  · Core Difference Summary
+  · Independence Statement
 
 ---
 
@@ -186,7 +210,7 @@ Both PRs and Issues are welcome. Please run python server.py and the offline dem
 
 ---
 
-🔬 Theoretical Origins and Independence Statement
+Theoretical Origins and Independence Statement
 
 Inspirations
 
@@ -201,9 +225,9 @@ Fundamental Architectural Differences
 
 Although Quintet‑Verify borrows the symbol naming from J‑Space and the organisational form from Quintet Verification, its underlying cognitive architecture differs irreducibly from both. These differences are not incremental improvements, but rather a redefinition of three fundamental assumptions: cognitive subject, information topology, and control nature.
 
- J‑Space (Global Workspace Theory) Quintet Verification (multi‑model debate) Quintet‑Verify (Anchored Cognitive Theory)
+Aspect J‑Space (Global Workspace Theory) Quintet Verification (multi‑model debate) Quintet‑Verify (Anchored Cognitive Theory)
 Cognitive Subject Inside a single model Multiple independent models (stateless) Multiple independent agents (each with private state)
-Carrier of Cognitive State Global context window Independent outputs of each model public shared state + private traces (physically isolated)
+Carrier of Cognitive State Global context window Independent outputs of each model Public shared state + private traces (physically isolated)
 Information Flow Global broadcast + competitive access Debate‑style full transmission Anchored references (via anchor_id + checksum for shared facts)
 Modification Mechanism Full rewrite (relies on introspective correction) Full rewrite (relies on debate correction) Incremental modification (precise coordinates + ripple declarations)
 Control Nature Prompt‑guided soft constraints Prompt‑guided soft constraints Compile‑time validation + routing guards (hard constraints)
@@ -211,7 +235,7 @@ Recovery Mechanism Textual ledger rollback No standardised recovery Atomic state
 Checks and Balances Self‑supervision (same standpoint) Cross‑model debate (independent standpoints) Permission interlocking + tribunal procedure (standpoint separation + procedural rigidity)
 Auditability Chain‑of‑thought text (non‑structural rollback) Debate text (non‑structural rollback) Structured Dense Track audit (traceable verification evidence for ✓ and falsification evidence for ✗)
 
-Core Difference Summary:
+Core Difference Summary
 
 · J‑Space addresses “how a single person thinks better” (deep introspection of a single consciousness);
 · Quintet Verification addresses “how a group reaches consensus through debate” (external checks via multiple standpoints);
