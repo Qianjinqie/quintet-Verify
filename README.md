@@ -155,7 +155,7 @@ pip install -r requirements.txt
 
 <a id="minimal-example-real-llm"></a>
 
-Minimal Example (Real LLM)
+### Minimal Example (Real LLM)
 
 ```python
 from quintet_verify import (
@@ -197,7 +197,7 @@ for section in pub.draft.sections:
 
 <a id="offline-demo-without-llm"></a>
 
-Offline Demo Without LLM
+### Offline Demo Without LLM
 
 ```python
 from quintet_verify import PublicState, QuintetState, build_graph, build_stub_agents
@@ -210,7 +210,7 @@ print(final["public"].verdict)
 
 <a id="web-console"></a>
 
-Web Console
+### Web Console
 
 ```bash
 python server.py  # default port 8000, open in browser
@@ -234,7 +234,7 @@ Both PRs and Issues are welcome. Please run python server.py and the offline dem
 
 <a id="inspirations"></a>
 
-Inspirations
+### Inspirations
 
 Quintet‑Verify draws inspiration from prior work in the following aspects:
 
@@ -245,7 +245,7 @@ We express our respect and gratitude for the original contributions of the above
 
 <a id="fundamental-architectural-differences"></a>
 
-Fundamental Architectural Differences
+### Fundamental Architectural Differences
 
 Although Quintet‑Verify borrows the symbol naming from J‑Space and the organisational form from Quintet Verification, its underlying cognitive architecture differs irreducibly from both. These differences are not incremental improvements, but rather a redefinition of three fundamental assumptions: cognitive subject, information topology, and control nature.
 
@@ -261,7 +261,7 @@ Auditability Chain‑of‑thought text (non‑structural rollback) Debate text (
 
 <a id="core-difference-summary"></a>
 
-Core Difference Summary
+### Core Difference Summary
 
 · J‑Space addresses “how a single person thinks better” (deep introspection of a single consciousness);
 · Quintet Verification addresses “how a group reaches consensus through debate” (external checks via multiple standpoints);
@@ -271,7 +271,7 @@ Quintet‑Verify’s unique contribution is the first combination of “private 
 
 <a id="independence-statement"></a>
 
-Independence Statement
+### Independence Statement
 
 Based on the fundamental architectural differences above, Quintet‑Verify hereby declares:
 
