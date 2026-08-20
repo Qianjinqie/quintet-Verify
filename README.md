@@ -33,6 +33,7 @@ A multi-agent cognitive control framework based on anchored cognitive architectu
 
 ---
 
+<a id="results-first"></a>
 ## Results First
 
 📊 **Fable 5 Blind Evaluation Conclusion**
@@ -55,6 +56,7 @@ Note: In practice, QV makes many API calls, incurring higher costs – it trades
 
 ---
 
+<a id="key-constraints"></a>
 ## Key Constraints
 
 - A does not write the main text, B does not alter the framework, C does not provide full‑text revisions, D does not ghostwrite on behalf of others, E does not directly overturn rulings.  
@@ -63,6 +65,7 @@ Note: In practice, QV makes many API calls, incurring higher costs – it trades
 
 ---
 
+<a id="why-not-just-use-one-large-model"></a>
 ## Why Not Just Use One Large Model?
 
 A single model’s “generation equals finality” is the root cause of hallucinations reaching the endpoint directly: it generates, reviews, and confirms by itself – the supervisor and the supervised share the same standpoint. Quintet‑Verify breaks this closed loop into five roles with mutually locked permissions –
@@ -71,6 +74,7 @@ Checks and balances evolve from “self‑discipline” to “other‑discipline
 
 ---
 
+<a id="core-features"></a>
 ## Core Features
 
 - **Dual‑channel cognitive architecture**: public (visible to routing) and private Dense Track (✓/?/✗) are physically isolated, with three layers of protection (structural / type / runtime assertions) ensuring private cognition never enters routing.  
@@ -84,6 +88,7 @@ Checks and balances evolve from “self‑discipline” to “other‑discipline
 
 ---
 
+<a id="how-is-it-different-from-other-multi-agent-frameworks"></a>
 ## How Is It Different From Other Multi-Agent Frameworks?
 
 - **AutoGen / CrewAI / MetaGPT**: all support multi‑agent collaboration and are model‑agnostic, but they lack three capabilities: inference‑time rigid checks and balances, private cognitive trace auditing, and incremental modification (token‑saving).  
@@ -96,6 +101,7 @@ Most frameworks do “let AI collaborate”; Quintet‑Verify does “let AI che
 
 ---
 
+<a id="quality-explanation"></a>
 ## Quality Explanation
 
 Compared with using a single model directly, Quintet‑Verify’s gains come from structural checks and balances, not from larger parameter counts:
@@ -107,6 +113,7 @@ The above is a qualitative comparison at the mechanism level; practical effectiv
 
 ---
 
+<a id="real-run-data"></a>
 ## Real-Run Data
 
 Full‑mode real run (August 2026, DeepSeek‑V4‑Pro‑0813, legal document review task):
@@ -120,6 +127,7 @@ The output concluded “conditionally feasible with hybrid architecture”: empi
 
 ---
 
+<a id="who-should-use-it"></a>
 ## Who Should Use It?
 
 - Developers building RAG applications but plagued by hallucinations  
@@ -133,8 +141,10 @@ Note: Related plugins will be open‑sourced later.
 
 ---
 
+<a id="quick-start"></a>
 ## Quick Start
 
+<a id="installation"></a>
 ### Installation
 
 ```bash
@@ -142,6 +152,8 @@ git clone https://github.com/Qianjinqie/quintet-Verify.git
 cd quintet-Verify
 pip install -r requirements.txt
 ```
+
+<a id="minimal-example-real-llm"></a>
 
 Minimal Example (Real LLM)
 
@@ -183,6 +195,8 @@ for section in pub.draft.sections:
     print(section.anchor_id, section.content)
 ```
 
+<a id="offline-demo-without-llm"></a>
+
 Offline Demo Without LLM
 
 ```python
@@ -194,6 +208,8 @@ final = build_graph(*build_stub_agents(), interrupt_before_e=False).invoke(
 print(final["public"].verdict)
 ```
 
+<a id="web-console"></a>
+
 Web Console
 
 ```bash
@@ -204,13 +220,19 @@ The console supports: Standard / Fast / Custom pipelines, intensity tiers, plugi
 
 ---
 
+<a id="contributing"></a>
+
 Contributing
 
 Both PRs and Issues are welcome. Please run python server.py and the offline demo before submitting, and describe your motivation and test results in the PR. Beginners can start with issues labelled good first issue.
 
 ---
 
+<a id="theoretical-origins-and-independence-statement"></a>
+
 Theoretical Origins and Independence Statement
+
+<a id="inspirations"></a>
 
 Inspirations
 
@@ -220,6 +242,8 @@ Quintet‑Verify draws inspiration from prior work in the following aspects:
 · The organisational form of multi‑role tribunal‑style checks and balances: inspired by the Quintet Verification multi‑model debate system shown at b23.tv/z3C0vVM, which demonstrated the feasibility of “transforming generation hallucinations into consensus games through role separation and objection procedures”.
 
 We express our respect and gratitude for the original contributions of the above works.
+
+<a id="fundamental-architectural-differences"></a>
 
 Fundamental Architectural Differences
 
@@ -235,6 +259,8 @@ Recovery Mechanism Textual ledger rollback No standardised recovery Atomic state
 Checks and Balances Self‑supervision (same standpoint) Cross‑model debate (independent standpoints) Permission interlocking + tribunal procedure (standpoint separation + procedural rigidity)
 Auditability Chain‑of‑thought text (non‑structural rollback) Debate text (non‑structural rollback) Structured Dense Track audit (traceable verification evidence for ✓ and falsification evidence for ✗)
 
+<a id="core-difference-summary"></a>
+
 Core Difference Summary
 
 · J‑Space addresses “how a single person thinks better” (deep introspection of a single consciousness);
@@ -242,6 +268,8 @@ Core Difference Summary
 · Quintet‑Verify addresses “how a group of agents with independent cognitive states converges on verifiable conclusions through rigid rules” (constitutional governance of distributed cognition).
 
 Quintet‑Verify’s unique contribution is the first combination of “private cognitive traces (Dense Track)” with a “rigid permission matrix”, allowing multi‑agent systems to achieve system‑level reliability that is auditable, traceable, and forcibly terminable while maintaining individual reasoning depth.
+
+<a id="independence-statement"></a>
 
 Independence Statement
 
@@ -256,4 +284,4 @@ Recommendation for readers:
 
 · If you are interested in “how a single model improves reasoning through introspective markers”, please refer to J‑Space Cognition Suite V3.6.
 · If you are interested in “how multiple models reach consensus through debate”, please refer to the Quintet Verification system.
-· If you are interested in “how to make multi‑agent collaboration produce auditable and checked conclusions through rigid rules”, please continue using Quintet‑Verify
+· If you are interested in “how to make multi‑agent collaboration produce auditable and checked conclusions through rigid rules”, please continue using Quintet‑Verify.
