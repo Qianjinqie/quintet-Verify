@@ -1,4 +1,3 @@
-```markdown
 # Quintet-Verify (QV)
 
 A multi-agent cognitive control framework based on anchored cognitive architecture – using a five‑role (A/B/C/D/E) tribunal‑style division of labor and private cognitive traces (✓/?/✗) to impose rigid checks and balances on agents at inference time: no fine‑tuning, no weight changes, only constraints on “who speaks when, with what authority, and based on what evidence.”
