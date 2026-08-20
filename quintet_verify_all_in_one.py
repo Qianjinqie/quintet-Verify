@@ -181,15 +181,18 @@ class Verdict(BaseModel):
     remand_coordinates: list[RevisionCoordinate] = Field(default_factory=list)
     critic_overfit: bool = False  # 过拟合判定：C 的缺陷系凑数/吹毛求疵
     overfit_reasoning: str | None = None
+    pro_remand: bool = False  # Pro 模式拦截：零缺陷未达 N 轮，系统直接打回 C 重审（非过拟合判定）
 
     @model_validator(mode="after")
     def _remand_requires_target(self) -> "Verdict":
         if self.critic_overfit and not self.overfit_reasoning:
             raise ValueError("判定 C 过拟合必须给出理由")
-        if not self.approved and not self.critic_overfit and not self.remand_coordinates:
+        if not self.approved and not self.critic_overfit and not self.pro_remand and not self.remand_coordinates:
             raise ValueError("打回 B 必须指定精准修改坐标")
         if not self.approved and self.critic_overfit and self.remand_coordinates:
             raise ValueError("打回 C（过拟合）与打回 B（坐标）不可同时成立")
+        if self.pro_remand and (self.approved or self.critic_overfit or self.remand_coordinates):
+            raise ValueError("Pro 拦截判决必须是独立的打回 C 重审信号")
         return self
 
 
@@ -229,8 +232,13 @@ class PublicState(BaseModel):
     final_ruling: FinalRuling | None = None
     iteration: int = 0
     critic_iteration: int = 0  # C 因过拟合被打回重审的次数（上限 MAX_CRITIC_REWORK）
+    # Pro 模式（流水线选项之一）：D 收到 C 的零缺陷报告时不立即审判，直接打回 C 重审；
+    # 仅当 C 连续 N 轮输出零缺陷时 D 才进入正常审判。N 由 pro_zero_rounds 指定（Pro 模式下默认 3）
+    pro_zero_rounds: Annotated[int, Field(ge=0, le=10)] = 0
+    zero_defect_streak: int = 0  # Pro 模式：C 当前连续零缺陷轮数（发现缺陷即清零）
     # ---- 运行配置（前端可调）----
-    pipeline: Literal["standard", "fast"] = "standard"  # standard=A~E全流程 / fast=仅B/C/D
+    # standard=A~E全流程 / fast=仅B/C/D / pro=A~E全流程+C零缺陷N轮重审门槛
+    pipeline: Literal["standard", "fast", "pro"] = "standard"
     intensity: Literal["low", "high", "max"] = "high"   # 架构强度分档
     flags: dict[str, bool] = Field(default_factory=dict)  # 插件开关（见 PLUGINS）
     hub: str | None = None              # 广播枢纽：共享事实/约束（插件2）
@@ -238,6 +246,13 @@ class PublicState(BaseModel):
     # 铁律3：熔断上限。默认 5，可调但有界（1~10），超出范围校验失败
     max_iterations: Annotated[int, Field(ge=1, le=10)] = 5
     user_satisfied: bool | None = None
+
+    @model_validator(mode="after")
+    def _pro_defaults(self) -> "PublicState":
+        # Pro 流水线：N 未指定（0）时默认 3，保证状态自洽
+        if self.pipeline == "pro" and self.pro_zero_rounds <= 0:
+            self.pro_zero_rounds = 3
+        return self
 
 
 class QuintetState(BaseModel):
@@ -465,6 +480,8 @@ class CriticAgent(BaseQuintetAgent):
             # 防止改判返工后的常规审查被误标记而跳过后续元认知动作
             public.metacog_rechecked = True
         public.critic_report = output
+        # Pro 模式：连续零缺陷计数（发现缺陷即清零）
+        public.zero_defect_streak = 0 if output.defects else public.zero_defect_streak + 1
         return public
 
     def check_permissions(self, state: QuintetState, output: Any) -> None:
@@ -501,6 +518,33 @@ class JudgeAgent(BaseQuintetAgent):
         raise NotImplementedError("角色基类仅承载权限语义（apply/check_permissions），请使用 LLM/Stub 子类")
 
     MAX_INSTRUCTION_CHARS: ClassVar[int] = 600  # 放宽阈值：避免 D 的打回指令偶发超长被纯长度拦截误判越权而中断 run
+
+    def pro_intercept(self, state: QuintetState) -> Verdict | None:
+        """Pro 模式拦截（初审专用）：C 报零缺陷且连续轮数未达 N 时不进入审判，直接打回 C 重审。
+
+        仅当流水线为 pro 时启用；N 取 pro_zero_rounds（未指定则默认 3）。
+        返回 None 表示不拦截（非 Pro 流水线 / C 报了缺陷 / 已达 N 轮门槛），交由正常审判流程。
+        拦截不消耗 critic_iteration（过拟合熔断配额），重审次数由 N 门槛自然约束。
+        """
+        pub = state.public
+        if pub.pipeline != "pro":
+            return None
+        n = pub.pro_zero_rounds or 3  # Pro 流水线下 N 默认 3
+        cr = pub.critic_report
+        if cr is None or cr.defects:
+            return None
+        if pub.zero_defect_streak >= n:
+            return None
+        self.think(
+            f"Pro 拦截：C 连续零缺陷 {pub.zero_defect_streak}/{n} 轮，"
+            "未达门槛，不放行审判，直接打回 C 重审",
+            CognitiveMark.UNCERTAIN,
+        )
+        return Verdict(
+            approved=False,
+            confidence_score=50,
+            pro_remand=True,
+        )
 
     def apply(self, public: PublicState, output: Verdict | FinalRuling) -> PublicState:
         if isinstance(output, Verdict):
@@ -762,7 +806,17 @@ class LLMCritic(_LLMMixin, CriticAgent):
         self.cfg = cfg
 
     def act(self, state: QuintetState, **ctx) -> CriticReport:
-        return self._ask(CriticReport, f"【公共状态】{_state_digest(state)}" + self._mods(state))  # type: ignore[return-value]
+        prompt = f"【公共状态】{_state_digest(state)}"
+        v = state.public.verdict
+        if v is not None and v.pro_remand:
+            # Pro 模式重审：上一轮零缺陷未获采信，要求独立重新验证而非复读结论
+            prompt += (
+                f"\n\n【Pro 重审指令】你上一轮报告零缺陷（当前连续 "
+                f"{state.public.zero_defect_streak}/{state.public.pro_zero_rounds or 3} 轮），裁判未直接采信，"
+                "要求你独立重新审查。请勿沿用上一轮结论：重新核对草稿各锚点与论证链，"
+                "只有确实无缺陷时才再次报告零缺陷，并在 coverage 中说明本轮复查的位置与深度。"
+            )
+        return self._ask(CriticReport, prompt + self._mods(state))  # type: ignore[return-value]
 
 
 class LLMJudge(_LLMMixin, JudgeAgent):
@@ -771,6 +825,10 @@ class LLMJudge(_LLMMixin, JudgeAgent):
         self.cfg = cfg
 
     def act(self, state: QuintetState, mode: str = "initial", **ctx) -> Verdict | FinalRuling:
+        if mode == "initial":
+            intercepted = self.pro_intercept(state)
+            if intercepted is not None:
+                return intercepted  # Pro 模式：零缺陷未达 N 轮，不进入审判直接打回 C 重审
         prompt = f"【公共状态】{_state_digest(state)}" + self._mods(state)
         if mode == "initial":
             return self._ask(Verdict, prompt + "\n\n请输出初审判决 Verdict。")  # type: ignore[return-value]
@@ -881,6 +939,9 @@ def route_after_verdict(public: PublicState) -> str:
         if public.pipeline != "fast":
             return "e_juror"  # Full 模式必经 E 审阅（不满意才上诉，满意则同意判决）
         return END
+    if verdict.pro_remand:
+        # Pro 模式拦截：零缺陷未达 N 轮，打回 C 重审（不消耗过拟合熔断配额）
+        return "c_critic"
     if verdict.critic_overfit:
         # D 判 C 过拟合：打回 C 重审；超限则交付当前草稿并标记存疑
         if public.critic_iteration < MAX_CRITIC_REWORK:
@@ -1215,6 +1276,13 @@ class StubBuilder(BuilderAgent):
 class StubCritic(CriticAgent):
     def act(self, state: QuintetState, **ctx) -> CriticReport:
         pub = state.public
+        # Pro 演示：Pro 流水线且距门槛还有余量时报零缺陷，展示"D 拦截打回 C 重审"链路
+        n = pub.pro_zero_rounds or 3
+        if pub.pipeline == "pro" and pub.zero_defect_streak < n - 1:
+            return CriticReport(
+                coverage=f"Pro 演示：第 {pub.zero_defect_streak + 1} 轮全锚点复审，未发现缺陷",
+                defects=[],
+            )
         if pub.draft is not None and pub.draft.revision_of is None:
             return CriticReport(coverage="全锚点初审", defects=[Defect(
                 severity=DefectSeverity.S, at_anchor="§2",
@@ -1229,6 +1297,9 @@ class StubJudge(JudgeAgent):
     def act(self, state: QuintetState, mode: str = "initial", **ctx) -> Verdict | FinalRuling:
         pub = state.public
         if mode == "initial":
+            intercepted = self.pro_intercept(state)
+            if intercepted is not None:
+                return intercepted  # Pro 模式：零缺陷未达 N 轮，直接打回 C 重审
             if pub.iteration == 0:
                 return Verdict(approved=False, confidence_score=72, remand_coordinates=[
                     RevisionCoordinate(anchor_id="§2", operation="rewrite", instruction="消除循环论证，补充独立论据")])
