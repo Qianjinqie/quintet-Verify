@@ -77,6 +77,8 @@ def _summary(role: str, mode: str | None, pub: jq.PublicState) -> str:
         return f"发现缺陷 {len(ds)} 条（S×{s}，A×{a}）"
     if role == "D" and mode == "initial" and pub.verdict:
         v = pub.verdict
+        if v.pro_remand:
+            return f"初审：Pro 拦截——零缺陷 {pub.zero_defect_streak}/{pub.pro_zero_rounds} 轮未达门槛，打回 C 重审"
         if v.critic_overfit:
             return f"初审：判 C 过拟合，打回重审（{v.overfit_reasoning or ''}）"
         return f"初审：{'通过' if v.approved else '打回 B'}，置信度 {v.confidence_score}"
@@ -177,12 +179,13 @@ class CustomRoleReq(BaseModel):
 class StartReq(BaseModel):
     task: str
     mode: str = "demo"  # demo / live
-    pipeline: str = "standard"  # standard=A~E / fast=仅B/C/D / custom=自定义线性流程(Beta)
+    pipeline: str = "standard"  # standard=A~E / fast=仅B/C/D / pro=A~E+C零缺陷N轮门槛 / custom=自定义线性流程(Beta)
     pipeline_spec: str = ""    # custom 时的流程定义，如 "A->B->C->F->D->E"
     role_prompts: dict[str, str] = {}    # Beta：内置角色系统提示词覆盖
     custom_roles: dict[str, CustomRoleReq] = {}  # v1.4：新建角色 字母→配置
     intensity: str = "high"  # low / high / max
     max_iterations: int = 5  # 熔断上限（1~10，由 PublicState 校验）
+    pro_zero_rounds: int = 0  # Pro 模式：C 连续 N 轮零缺陷 D 才审判（0=关闭，1~10）
     plugins: dict[str, bool] = {}  # 插件开关，缺省全部启用
     # 全局默认配置
     api_key: str = ""
@@ -202,8 +205,8 @@ def start_run(req: StartReq) -> dict:
     _gc_runs()
     rec = RunRecord()
     RUNS[rec.id] = rec
-    if req.pipeline not in ("standard", "fast", "custom"):
-        raise HTTPException(400, "pipeline 必须是 standard / fast / custom")
+    if req.pipeline not in ("standard", "fast", "pro", "custom"):
+        raise HTTPException(400, "pipeline 必须是 standard / fast / pro / custom")
     custom_flow = None
     if req.pipeline == "custom":
         try:
@@ -222,10 +225,12 @@ def start_run(req: StartReq) -> dict:
             max_iterations=req.max_iterations,
             pipeline="fast" if req.pipeline == "custom" else req.pipeline,  # custom 复用 fast 权限语义
             intensity=req.intensity,
+            # N 门槛仅 Pro 流水线生效（未指定默认 3）；其余流水线一律归零关闭
+            pro_zero_rounds=(req.pro_zero_rounds or 3) if req.pipeline == "pro" else 0,
             flags={**jq.DEFAULT_FLAGS, **req.plugins},
         )
     except Exception:
-        raise HTTPException(400, "max_iterations 必须在 1~10 之间")
+        raise HTTPException(400, "max_iterations（1~10）或 pro_zero_rounds（0~10）超出范围")
     fast = req.pipeline == "fast"
     if req.mode == "live":
         need = "BCD" if fast else "ABCDE"
