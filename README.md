@@ -15,9 +15,9 @@ A multi-agent cognitive control framework based on anchored cognitive architectu
 - [Key Constraints](#key-constraints)
 - [Why Not Just Use One Large Model?](#why-not-just-use-one-large-model)
 - [Core Features](#core-features)
-- [How Is It Different From Other Multi‑Agent Frameworks?](#how-is-it-different-from-other-multi-agent-frameworks)
+- [How Is It Different From Other Multi-Agent Frameworks?](#how-is-it-different-from-other-multi-agent-frameworks)
 - [Quality Explanation](#quality-explanation)
-- [Real‑Run Data](#real-run-data)
+- [Real-Run Data](#real-run-data)
 - [Who Should Use It?](#who-should-use-it)
 - [Quick Start](#quick-start)
   - [Installation](#installation)
@@ -84,7 +84,7 @@ Checks and balances evolve from “self‑discipline” to “other‑discipline
 
 ---
 
-## How Is It Different From Other Multi‑Agent Frameworks?
+## How Is It Different From Other Multi-Agent Frameworks?
 
 - **AutoGen / CrewAI / MetaGPT**: all support multi‑agent collaboration and are model‑agnostic, but they lack three capabilities: inference‑time rigid checks and balances, private cognitive trace auditing, and incremental modification (token‑saving).  
 - **Quintet‑Verify**: on top of supporting multi‑agent collaboration and model‑agnosticism, it additionally provides:  
@@ -107,7 +107,7 @@ The above is a qualitative comparison at the mechanism level; practical effectiv
 
 ---
 
-## Real‑Run Data
+## Real-Run Data
 
 Full‑mode real run (August 2026, DeepSeek‑V4‑Pro‑0813, legal document review task):
 
@@ -256,4 +256,4 @@ Recommendation for readers:
 
 · If you are interested in “how a single model improves reasoning through introspective markers”, please refer to J‑Space Cognition Suite V3.6.
 · If you are interested in “how multiple models reach consensus through debate”, please refer to the Quintet Verification system.
-· If you are interested in “how to make multi‑agent collaboration produce auditable and checked conclusions through rigid rules”, please continue using Quintet‑Verify.
+· If you are interested in “how to make multi‑agent collaboration produce auditable and checked conclusions through rigid rules”, please continue using Quintet‑Verify
