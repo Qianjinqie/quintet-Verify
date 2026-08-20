@@ -114,8 +114,8 @@ final = build_graph(*build_stub_agents(), interrupt_before_e=False).invoke(
     QuintetState(public=PublicState(task="演示任务", user_satisfied=True))
 )
 print(final["public"].verdict)
-Web 控制台
 
+Web 控制台
 
 python server.py  # 默认 8000 端口，浏览器打开即可
 控制台支持：标准 / Fast / 自定义三种流水线、强度分档、插件开关、分角色 API 配置、流程定义编辑与实时校验、角色提示词覆盖、运行过程可视化（事件流 / 草稿 / Dense Track）。
@@ -150,7 +150,7 @@ Quintet-Verify 在以下方面受到前期工作的启发：
 
 修改机制
 
-· J-Space：全量重写（依赖内省矫正） · 五者验证：全量重写（依赖辩论修正） · Quintet-Verify：增量修改（精准坐标 + 涟漪声明，平均省 80% 上下文）
+· J-Space：全量重写（依赖内省矫正） · 五者验证：全量重写（依赖辩论修正） · Quintet-Verify：增量修改（精准坐标 + 涟漪声明）
 
 控制性质
 
