@@ -78,6 +78,19 @@ border:1px solid var(--amber);border-radius:10px;padding:12px 16px;margin-top:12
 .role-row .rn{font-size:12px;color:var(--dim)}
 details{border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:var(--panel2)}
 summary{cursor:pointer;font-size:13px;color:var(--blue);font-weight:600}
+.fa-head{display:flex;align-items:baseline;gap:12px;margin-bottom:10px}
+.fa-head h2{font-size:17px;letter-spacing:1px}
+.fa-meta{font-size:12px;color:var(--dim)}
+.fa-body{font-size:14px;line-height:1.78;color:var(--fg)}
+.fa-body h1,.fa-body h2,.fa-body h3{color:var(--blue);line-height:1.3;margin:16px 0 8px}
+.fa-body h1{font-size:20px}.fa-body h2{font-size:17px}.fa-body h3{font-size:15px}
+.fa-body p{margin:8px 0}
+.fa-body ul,.fa-body ol{margin:8px 0;padding-left:24px}
+.fa-body li{margin:4px 0}
+.fa-body code{background:var(--panel2);border:1px solid var(--line);border-radius:4px;padding:1px 5px;font:12px monospace;color:var(--amber)}
+.fa-body blockquote{margin:8px 0;padding:6px 14px;border-left:3px solid var(--line);color:var(--dim)}
+.fa-body hr{border:none;border-top:1px solid var(--line);margin:14px 0}
+.fa-empty{color:var(--dim);padding:10px 0}
 </style>
 </head>
 <body>
@@ -150,6 +163,11 @@ summary{cursor:pointer;font-size:13px;color:var(--blue);font-weight:600}
     <div class="body hide" id="t-dr"></div>
     <div class="body hide" id="t-dt"></div>
     <div class="body hide" id="t-js"><pre id="raw" style="font-size:11px;white-space:pre-wrap"></pre></div>
+  </div>
+
+  <div class="card hide" id="p4">
+    <div class="fa-head"><h2>📝 完整回答</h2><span class="fa-meta" id="fa-meta"></span></div>
+    <div class="fa-body" id="t-fa">尚未运行。</div>
   </div>
 </div>
 
@@ -305,8 +323,8 @@ $('#go').onclick=async()=>{
     const need=body.pipeline==='fast'?'BCD':'ABCDE';
     if(!body.api_key&&![...need].some(r=>body.roles[r]&&body.roles[r].api_key)){alert('请填 API Key（全局或在用角色）');return}
   }
-  $('#go').disabled=true;$('#p2').classList.remove('hide');$('#p3').classList.remove('hide');
-  $('#fb').classList.add('hide');$('#chips').innerHTML='';$('#t-ev').innerHTML='';$('#t-dr').innerHTML='';$('#t-dt').innerHTML='';
+  $('#go').disabled=true;$('#p2').classList.remove('hide');$('#p3').classList.remove('hide');$('#p4').classList.remove('hide');
+  $('#fb').classList.add('hide');$('#chips').innerHTML='';$('#t-ev').innerHTML='';$('#t-dr').innerHTML='';$('#t-dt').innerHTML='';$('#t-fa').innerHTML='';
   renderPipe([]);
   try{
     const d=await jfetch('/api/runs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
@@ -322,6 +340,50 @@ async function poll(){
   catch(e){$('#st').textContent='连接中断：'+e.message;clearInterval(timer);timer=null;$('#go').disabled=false;return}
   draw(d);
   if(d.status==='done'||d.status==='error'){clearInterval(timer);timer=null;$('#go').disabled=false}
+}
+
+/* 轻量 Markdown 渲染（覆盖标题/列表/粗斜体/行内代码/引用/分隔线/段落）。
+   内容先经 esc 转义再套标签，避免注入；零依赖，不连 CDN。 */
+function md(src){
+  if(!src)return '';
+  const lines=String(src||'').split('\n');
+  let html='',inUl=false,inOl=false,inQuote=false;
+  const closeLists=()=>{if(inUl){html+='</ul>';inUl=false}if(inOl){html+='</ol>';inOl=false}};
+  const closeQuote=()=>{if(inQuote){html+='</blockquote>';inQuote=false}};
+  const inline=s=>esc(s)
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g,'<em>$1</em>')
+    .replace(/`([^`]+?)`/g,'<code>$1</code>');
+  for(const raw of lines){
+    const t=raw.trim();
+    if(t===''){closeLists();closeQuote();continue}
+    let m;
+    if(m=t.match(/^(#{1,3})\s+(.*)$/)){closeLists();closeQuote();const lv=m[1].length;html+=`<h${lv}>${inline(m[2])}</h${lv}>`;continue}
+    if(t==='---'||t==='***'){closeLists();closeQuote();html+='<hr>';continue}
+    if(m=t.match(/^>\s?(.*)$/)){closeQuote();if(!inQuote){html+='<blockquote>';inQuote=true}html+=`<p>${inline(m[1])}</p>`;continue}
+    if(m=t.match(/^[-*]\s+(.*)$/)){closeQuote();if(!inUl){html+='<ul>';inUl=true}html+=`<li>${inline(m[1])}</li>`;continue}
+    if(m=t.match(/^\d+\.\s+(.*)$/)){closeQuote();if(!inOl){html+='<ol>';inOl=true}html+=`<li>${inline(m[1])}</li>`;continue}
+    closeLists();closeQuote();html+=`<p>${inline(t)}</p>`;
+  }
+  closeLists();closeQuote();
+  return html;
+}
+
+/* 页面底部「完整回答」：渲染 B 执行者当前草稿的全部章节（最终回答） */
+function renderFullAnswer(p,status){
+  const el=$('#t-fa');
+  if(!p||!p.draft||!p.draft.sections||!p.draft.sections.length){
+    el.innerHTML='<div class="fa-empty">尚未生成草稿。B 执行者的完整回答将在运行后显示在这里。</div>';
+    $('#fa-meta').textContent='';
+    return;
+  }
+  const full=p.draft.sections.map(s=>(s.content||'')).join('\n\n');
+  el.innerHTML=md(full);
+  const n=p.draft.sections.length;
+  let tail='';
+  if(p.final_ruling)tail=' · 终审'+(p.final_ruling.gag_order?'禁言令':p.final_ruling.upheld?'维持':'改判');
+  else if(status==='done')tail=' · 已结束';
+  $('#fa-meta').textContent=`${n} 个章节${tail}`;
 }
 
 function draw(d){
@@ -346,6 +408,7 @@ function draw(d){
     $('#t-dr').innerHTML=p.draft?p.draft.sections.map(s=>
       '<div class="sec"><span class="a">'+esc(s.anchor_id)+'</span><div class="c">'+esc(s.content)+'</div></div>').join(''):'';
     $('#raw').textContent=JSON.stringify(p,null,2);
+    renderFullAnswer(p, d.status);
   }
   $('#fb').classList.toggle('hide',d.status!=='awaiting_feedback');
   $('#t-ev').innerHTML=(d.events||[]).map(e=>
