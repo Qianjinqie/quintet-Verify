@@ -145,8 +145,7 @@ The output concluded “conditionally feasible with hybrid architecture”: empi
 - Programmers using AI to write high‑quality code  
 - Researchers using AI for mathematical research assistance
 
-Note: Related plugins will be open‑sourced later.
-
+Note: Related plugins are now open‑sourced:https://github.com/Qianjinqie/Quintet-Verify-plugin
 ---
 
 <a id="quick-start"></a>
