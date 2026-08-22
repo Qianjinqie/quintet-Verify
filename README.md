@@ -1,5 +1,7 @@
 # Quintet-Verify (QV)
 
+**Hard‑constrained multi‑agent inference** · 9.17/10 blind eval · ~$0.32/run · Python 3.11+
+
 ![Python](https://img.shields.io/badge/Python-3.11%2B-blue?logo=python&logoColor=white)
 ![License](https://img.shields.io/badge/License-Apache%202.0-green)
 ![LangGraph](https://img.shields.io/badge/LangGraph-0.4%2B-orange)
