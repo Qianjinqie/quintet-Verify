@@ -1,5 +1,11 @@
 # Quintet-Verify (QV)
 
+![Python](https://img.shields.io/badge/Python-3.11%2B-blue?logo=python&logoColor=white)
+![License](https://img.shields.io/badge/License-Apache%202.0-green)
+![LangGraph](https://img.shields.io/badge/LangGraph-0.4%2B-orange)
+![Status](https://img.shields.io/badge/Status-Active-brightgreen)
+[![Stars](https://img.shields.io/github/stars/Qianjinqie/quintet-Verify?style=social)](https://github.com/Qianjinqie/quintet-Verify/stargazers)
+
 A multi-agent cognitive control framework based on anchored cognitive architecture – using a five‑role (A/B/C/D/E) tribunal‑style division of labor and private cognitive traces (✓/?/✗) to impose rigid checks and balances on agents at inference time: no fine‑tuning, no weight changes, only constraints on “who speaks when, with what authority, and based on what evidence.”
 
 - Model‑agnostic · Python 3.11+ · LangGraph · Pydantic v2 · FastAPI
