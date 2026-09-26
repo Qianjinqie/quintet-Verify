@@ -54,7 +54,8 @@ A multi-agent cognitive control framework based on anchored cognitive architectu
 **Evaluation Setup** – Quintet-Verify runs on DeepSeek-V4-Flash-0731 (a lightweight version with 13 billion active parameters; legal document tasks use DeepSeek-V4-Pro-0813), while the contestant is the evaluation model itself (Fable 5), running directly without any framework. The evaluation model only sees two anonymous labels, A and B — in other words, under strong-model scoring, the lightweight model driven by Quintet-Verify outperforms F5.
 
 
-The blind evaluation by Fable 5 gave our project an overall score of 9.17/10, while the contestant (Fable5, unknown to the judges) received 8.0/10 – a margin of +1.17.
+The blind evaluation by Fable 5 gave our project an overall score of 9.17/10, while the contestant (The blind evaluation by Fable 5 gave our project an overall score of 9.17/10, while the contestant (Fable 5) received 8.0/10 – a margin of +1.17.
+) received 8.0/10 – a margin of +1.17.
 
 All three tasks were won:
 
