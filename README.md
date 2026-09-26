@@ -90,7 +90,7 @@ Checks and balances evolve from “self‑discipline” to “other‑discipline
 
 - **Dual‑channel cognitive architecture**: public (visible to routing) and private Dense Track (✓/?/✗) are physically isolated, with three layers of protection (structural / type / runtime assertions) ensuring private cognition never enters routing.  
 - **Five‑role rigid checks and balances**: A (Architect) · B (Executor) · C (Verifier) · D (Judge) · E (Juror) – each with locked permissions and forbidden zones.  
-- **Three iron rules (enforced in code)**: ① confidence isolation ② incremental modification (anchor coordinates + ripple declarations) ③ circuit‑breaker gag order (max_iterations=110, D can issue a gag order).  
+- **Three iron rules (enforced in code)**: ① confidence isolation ② incremental modification (anchor coordinates + ripple declarations) ③ circuit‑breaker gag order (max_iterations=5 by default, 1~10 bounded, D can issue a gag order). 
 - **Intensity tiers**: low / high (default) / max; under stringent mode, defects must be accompanied by an impact chain, and D may not pass if confidence is insufficient.  
 - **Fast mode**: only the B/C/D triangle, no outline, no appeal branch – suitable for simple tasks and low‑cost scenarios.  
 - **Overfitting governance**: C has no mandatory quota (zero defects allowed, but must include a coverage statement); D may deem C overly pedantic and send it back for review (max 2 times).  
