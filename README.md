@@ -4,7 +4,7 @@
 
 ![Python](https://img.shields.io/badge/Python-3.11%2B-blue?logo=python&logoColor=white)
 ![License](https://img.shields.io/badge/License-Apache%202.0-green)
-![LangGraph](https://img.shields.io/badge/LangGraph-0.4%2B-orange)
+![LangGraph](https://img.shields.io/badge/LangGraph-0.2%2B-orange)
 ![Status](https://img.shields.io/badge/Status-Active-brightgreen)
 [![Stars](https://img.shields.io/github/stars/Qianjinqie/quintet-Verify?style=social)](https://github.com/Qianjinqie/quintet-Verify/stargazers)
 ![Cost](https://img.shields.io/badge/cost-~$0.36%2Frun-yellowgreen)
