@@ -1,4 +1,4 @@
-#Quintet-Verify (QV)
+Quintet-Verify (QV)
 
 Hard‑constrained multi‑agent inference · 9.17/10 blind eval · ~$0.36/run · Python 3.11+
 
