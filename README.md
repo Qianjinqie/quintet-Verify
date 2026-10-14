@@ -271,3 +271,5 @@ Recommendation for readers:
 · If you are interested in “how a single model improves reasoning through introspective markers”, please refer to J‑Space Cognition Suite V3.6.
 · If you are interested in “how multiple models reach consensus through debate”, please refer to the Quintet Verification system.
 · If you are interested in “how to make multi‑agent collaboration produce auditable and checked conclusions through rigid rules”, please continue using Quintet‑Verify.
+
+**Note: If there are translation errors in other language versions, please refer to this version
