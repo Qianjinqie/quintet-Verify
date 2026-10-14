@@ -1,4 +1,4 @@
-[English](README.md) | **简体中文** | [日本語](README.ja.md) | [한국어](README.ko.md) | [Español](README.es.md) | [Français](README.fr.md) | [Deutsch](README.de.md) | [Português (BR)](README.pt-BR.md) | [Русский](README.ru.md)</p>
+[English](README.md) | **简体中文** | [日本語](README.ja.md) | [한국어](README.ko.md) | [Español](README.es.md) | [Français](README.fr.md) | [Deutsch](README.de.md) | [Português (BR)](README.pt-BR.md) | [Русский](README.ru.md)
 
 # Quintet-Verify (QV)
 
@@ -49,7 +49,7 @@
 
 📊 **Fable 5 盲评结论**
 
-**评测设置**——Quintet-Verify 运行在 DeepSeek-V4-Flash-0731 上（一个拥有 130 亿激活参数的轻量版本；法律文书任务使用 DeepSeek-V4-Pro-0813），而评测模型是 Fable 5，但是，评测模型并不知道选手模型中有一个 F5)，不借助任何框架直接运行。评测模型只能看到 A、B 两个匿名标签——换句话说，在强模型打分之下，由 Quintet-Verify 驱动的轻量模型胜过了 F5。
+**评测设置**——Quintet-Verify 运行在 DeepSeek-V4-Flash-0731 上（一个拥有 130 亿激活参数的轻量版本；法律文书任务使用 DeepSeek-V4-Pro-0813），而参赛者正是评测模型本身（Fable 5），不借助任何框架直接运行。评测模型只能看到 A、B 两个匿名标签——换句话说，在强模型打分之下，由 Quintet-Verify 驱动的轻量模型胜过了 F5。
 
 Fable 5 的盲评给本项目打出 9.17/10 的总分，而参赛者（Fable 5）得到 8.0/10——领先 +1.17。
 
