@@ -1,3 +1,5 @@
+<p align="right">**English** | [简体中文](README.zh-CN.md) | [日本語](README.ja.md) | [한국어](README.ko.md) | [Español](README.es.md) | [Français](README.fr.md) | [Deutsch](README.de.md) | [Português (BR)](README.pt-BR.md) | [Русский](README.ru.md)</p>
+
 # Quintet-Verify (QV)
 
 **Hard‑constrained multi‑agent inference** · 9.17/10 blind eval · ~$0.36/run · Python 3.11+
