@@ -1,4 +1,4 @@
-[English](README.en.md) | **简体中文** | [日本語](README.ja.md) | [한국어](README.ko.md) | [Español](README.es.md) | [Français](README.fr.md) | [Deutsch](README.de.md) | [Português (BR)](README.pt-BR.md) | [Русский](README.ru.md)
+[English](docs/README.en.md) | **简体中文** | [日本語](docs/README.ja.md) | [한국어](docs/README.ko.md) | [Español](docs/README.es.md) | [Français](docs/README.fr.md) | [Deutsch](docs/README.de.md) | [Português (BR)](docs/README.pt-BR.md) | [Русский](docs/README.ru.md)
 
 # Quintet-Verify (QV)
 
